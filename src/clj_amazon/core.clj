@@ -23,8 +23,7 @@
 (def +request-method+ "GET")
 
 (def +service+ "AWSECommerceService")
-(def +service-version+ "2011-08-01" ;"2009-03-31"
-  )
+(def +service-version+ "2013-08-01")
 
 (defn percent-encode-rfc-3986 [s]
   (-> (java.net.URLEncoder/encode (str s) +utf-8+)
