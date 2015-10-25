@@ -77,7 +77,7 @@
   ;;;;;;;;;;;;;;;;;;
   "ItemSearch" ; item-search
   ["Actor" "Artist" "AudienceRating" "Author" "Availability" "Brand" "BrowseNode" "City" "Composer" "Condition" "Conductor"
-   "Director" (_bool->str "IncludeReviewsSummary") "ItemPage" (encode-url "Keywords") "Manufacturer" "MaximumPrice" "MinimumPrice"
+   "Director" (_bool->str "IncludeReviewsSummary") "ItemPage" "Keywords" "Manufacturer" "MaximumPrice" "MinimumPrice"
    "Neighborhood" "Orchestra" "PostalCode" "Power" "Publisher" "RelatedItemPage" "RelationshipType" "ReviewSort" "SearchIndex"
    "Sort" "TagPage" "TagsPerPage" "TagSort" "TextStream" "Title" "TruncateReviewsAt" "VariationPage"]
   ;;;;;;;;;;;;;;;;;;

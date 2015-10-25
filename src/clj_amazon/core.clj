@@ -86,8 +86,6 @@
 (defn- parse-xml [xml] (xml/parse (ByteArrayInputStream. (.getBytes xml "UTF-8"))))
 (defn fetch-url [url] (-> url http/get :body parse-xml))
 
-(defn encode-url [url] (if url (java.net.URLEncoder/encode url +utf-8+)))
-
 (defn assoc+
   ([m k v]
    (let [item (get m k)]
