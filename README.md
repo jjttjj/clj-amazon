@@ -19,13 +19,15 @@ And at the REPL...
 
     (use 'clj-amazon.product-advertising)
 
-    (def ACCESS-KEY "YOUR-ACCESS-KEY-HERE" )
+    (def ACCESS-KEY "YOUR-ACCESS-KEY-HERE")
 
-    (def SECRET-KEY "YOUR-SECRET-KEY-HERE" )
+    (def SECRET-KEY "YOUR-SECRET-KEY-HERE")
+
+    (def ENDPOINT "LOCALE-WHERE-YOU-ARE-MAKING-THE-REQUEST")
 
     (def ASSOCIATE-ID "YOUR-ASSOCIATE-ID-HERE")
 
-    (def gibson-opus-search (with-signer (ACCESS-KEY, SECRET-KEY) (item-search :search-index "Books", :keywords "Neuromancer", :associate-tag ASSOCIATE-ID, :condition "New")))
+    (def gibson-opus-search (with-signer (ACCESS-KEY, SECRET-KEY, ENDPOINT) (item-search :search-index "Books", :keywords "Neuromancer", :associate-tag ASSOCIATE-ID, :condition "New")))
 
 
 ## Reference
