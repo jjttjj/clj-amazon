@@ -50,6 +50,24 @@
     :TotalPages [:total-pages (read-string (first (:content xml)))]
     :TotalResults [:total-results (read-string (first (:content xml)))]
     :Type [:type (first (:content xml))]
+
+    ;; for ItemAttributes
+    :Binding [:binding (first (:content xml))]
+    :Format [:format (first (:content xml))]
+    :ReleaseDate [:release-date (first (:content xml))]
+    :Publisher [:publisher (first (:content xml))]
+
+    ;; for Images
+    :LargeImage [:large-image {:url (-> xml :content first :content first)
+                               :height (-> xml :content second :content first)
+                               :width (-> xml :content (nth 2) :content first)}]
+    :MediumImage [:medium-image {:url (-> xml :content first :content first)
+                               :height (-> xml :content second :content first)
+                               :width (-> xml :content (nth 2) :content first)}]
+    :SmallImage [:small-image {:url (-> xml :content first :content first)
+                               :height (-> xml :content second :content first)
+                               :width (-> xml :content (nth 2) :content first)}]
+
     [nil nil] ; In case some weird tag appears, ignore it for now.
     ))
 
