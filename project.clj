@@ -6,8 +6,8 @@
             :distribution :repo
             :comments "same as Clojure"}
   :plugins [[lein-autodoc "0.9.0"]]
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [clj-http "0.5.8"]]
+  :dependencies [[org.clojure/clojure "1.7.0"]
+                 [clj-http "2.0.0"]]
   :autodoc {:name "clj-amazon"
             :description "Clojure bindings for the Amazon Product Advertising API."
             :copyright "Copyright 2011~2012 Eduardo Julian"
