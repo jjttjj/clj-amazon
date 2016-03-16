@@ -78,6 +78,34 @@
   (let [items-tag (find-tag :Items (:content response))]
     {:items (parse-items items-tag)}))
 
+(defn tag-content?
+  [content]
+  (and (map? content)
+       (contains? content :tag)))
+
+(defn- parse-content
+  [content]
+  (cond
+    (tag-content? content)
+    (hash-map (-> content :tag normalize-tag-name-key)
+              (parse-content (:content content)))
+
+    (and (vector? content) (= 1 (count content)))
+    (parse-content (first content))
+    
+    (and (vector? content) (same-tags? content))
+    (mapv #(-> % vals first) (mapv parse-content content))
+    
+    (vector? content)    
+    (apply merge (mapv parse-content content))
+    
+    (string? content) content))
+
+(defmethod parse :BrowseNodeLookupResponse
+  [response]
+  (let [browse-nodes-tag (find-tag :BrowseNodes (:content response))]
+    (parse-content (:content browse-nodes-tag))))
+
 (defmethod parse :default
   [response]
   (throw (ex-info "Can not parse response"

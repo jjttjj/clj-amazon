@@ -1,6 +1,6 @@
 (ns clj-amazon.parser-test
   (:require [clj-amazon
-             [fixture :refer [item-lookup-response item-search-response]]
+             [fixture :refer :all]
              [parser :refer :all]]
             [clojure.test :refer :all]))
 
@@ -13,3 +13,7 @@
   (let [result (parse item-lookup-response)]
     (is (= (-> result keys) [:items]))
     (is (= 2 (-> result :items count)))))
+
+(deftest test-parse-browse-node-lookup-response
+  (let [result (parse browse-node-lookup-response)]
+    (is (= (-> result keys sort) [:browse-node :request]))))
