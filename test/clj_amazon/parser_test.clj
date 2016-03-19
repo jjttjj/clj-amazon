@@ -18,4 +18,4 @@
 
 (deftest test-parse-browse-node-lookup-response
   (let [result (parse bnl/response)]
-    (is (= (-> result keys sort) [:browse-node :request]))))
+    (is (= (-> result keys) [:browse-nodes]))))

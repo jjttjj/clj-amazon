@@ -1,5 +1,5 @@
 (ns clj-amazon.parser
-  (:require [clojure.string :as cstr]))
+  (:require [clojure.zip :as zip]))
 
 (defn- normalize-tag-name-key
   [name-key]
@@ -62,21 +62,6 @@
   [total-pages-tag]
   (-> total-pages-tag :content first))
 
-(defmulti parse (fn [response] (:tag response)))
-
-(defmethod parse :ItemSearchResponse
-  [response]
-  (let [items-tag (find-tag :Items (:content response))
-        total-results-tag (find-tag :TotalResults (:content items-tag))
-        total-pages-tag (find-tag :TotalPages (:content items-tag))]
-    {:total-results (parse-total-results total-results-tag)
-     :total-pages (parse-total-pages total-pages-tag)
-     :items (parse-items items-tag)}))
-
-(defmethod parse :ItemLookupResponse
-  [response]
-  (let [items-tag (find-tag :Items (:content response))]
-    {:items (parse-items items-tag)}))
 
 (defn tag-content?
   [content]
@@ -101,10 +86,65 @@
     
     (string? content) content))
 
+(defmulti parse (fn [response] (:tag response)))
+
+(defmethod parse :ItemSearchResponse
+  [response]
+  (let [items-tag (find-tag :Items (:content response))
+        total-results-tag (find-tag :TotalResults (:content items-tag))
+        total-pages-tag (find-tag :TotalPages (:content items-tag))]
+    {:total-results (parse-total-results total-results-tag)
+     :total-pages (parse-total-pages total-pages-tag)
+     :items (parse-items items-tag)}))
+
+(defmethod parse :ItemLookupResponse
+  [response]
+  (let [items-tag (find-tag :Items (:content response))]
+    {:items (parse-items items-tag)}))
+
+(defn- loc->tag
+  [loc]
+  (-> loc zip/node :tag))
+
+(defn- find-first-loc
+  "Finds the first location in the hierarchy that matches a predicate 
+   by depth-first and moving next location."
+  [loc pred]
+  (loop [loc loc]
+    (when-not (zip/end? loc)
+      (if (pred loc)
+        loc
+        (recur (zip/next loc))))))
+
+(defn- find-first-loc-backward
+  "Finds the first location in the hierarchy that matches a predicate 
+   by depth-first and moving previous location."
+  [loc pred]
+  (loop [loc loc]
+    (when loc
+      (if (pred loc)
+        loc
+        (recur (zip/prev loc))))))
+
+(defn- remove-first-loc
+  [loc pred]
+  "Removes the first location in the hierarchy that matches a predicate
+   by depth-first and moving next location. Returns this loc after removing."
+  (if-let [finded (find-first-loc loc pred)]
+    (-> finded
+        zip/remove
+        (find-first-loc-backward #(= (loc->tag %) (loc->tag loc))))
+    (throw (Exception. "can not find the remove location"))))
+
 (defmethod parse :BrowseNodeLookupResponse
   [response]
-  (let [browse-nodes-tag (find-tag :BrowseNodes (:content response))]
-    (parse-content (:content browse-nodes-tag))))
+  (-> response
+      zip/xml-zip
+      (remove-first-loc #(= (loc->tag %) :OperationRequest))
+      (remove-first-loc #(= (loc->tag %) :Request))
+      zip/root
+      parse-content
+      :browse-node-lookup-response))
 
 (defmethod parse :default
   [response]
