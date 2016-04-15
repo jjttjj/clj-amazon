@@ -13,8 +13,9 @@
 (ns clj-amazon.core
   "The core functionality shared by other namespaces."
   (:import (java.io ByteArrayInputStream))
-  (:require [clj-http.client :as http]
-            [clojure.xml :as xml]))
+  (:require ;; [clj-http.client :as http]
+   [org.httpkit.client :as http]
+   [clojure.xml :as xml]))
 
 ; The following is a Clojure version of Amazon's SignedRequestsHelper class + some modifications.
 (def +utf-8+ "UTF-8")
@@ -84,7 +85,7 @@
 (def ^:dynamic *signer*)
 
 (defn- parse-xml [xml] (xml/parse (ByteArrayInputStream. (.getBytes xml "UTF-8"))))
-(defn fetch-url [url] (-> url http/get :body parse-xml))
+(defn fetch-url [url] (-> @(http/get url) :body parse-xml))
 
 (defn assoc+
   ([m k v]

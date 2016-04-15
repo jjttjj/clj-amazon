@@ -7,11 +7,10 @@
             :comments "same as Clojure"}
   :plugins [[lein-autodoc "0.9.0"]]
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [clj-http "2.0.0"]]
+                 [http-kit "2.1.19"]]
   :autodoc {:name "clj-amazon"
             :description "Clojure bindings for the Amazon Product Advertising API."
             :copyright "Copyright 2011~2012 Eduardo Julian"
             :web-src-dir "http://github.com/FreeAgent/clj-amazon/src/"
             :web-home "http://github.com/FreeAgent/clj-amazon/"
-            :output-path "autodoc"}
-)
+            :output-path "autodoc"})
